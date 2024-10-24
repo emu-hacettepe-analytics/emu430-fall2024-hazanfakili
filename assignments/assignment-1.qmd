@@ -4,12 +4,65 @@ title: "Assignment 1"
 
 # Assignment 1
 
-```{r}
-1 + 1
-```
-
 My first assignment has two parts.
 
-## (a)
+## Part 1
 
-## (b)
+```{Veri Bilimi ve Endüstri Mühendisliği Üzerine Sohbetler - Baykal Hafızoğlu & Erdi Daşdemir}
+
+Summary
+Bayal’s presentation focused on his academic and professional journey, highlighting key lessons in operations research, analytics, and optimization. After earning degrees from METU and a PhD. from Arizona State University, he shifted from academia to industry, working with companies like Lamsoft and Fico. He explained four main types of analytics: descriptive, diagnostic, predictive, and prescriptive, emphasizing real world applications such as supply chain management and pricing models. Bayal stressed the importance of mastering tools like python, gurobi, and xpress to remain competitive. A key takeaway was the importance of defining problems clearly and using quantifiable KPIs to measure success. Bayal reflected on the gap between theory and practice, advising students to build practical skills through small projects and optimization workflows. He noted that AI complements but does not replace traditional optimization, as both are essential for solving complex problems. He also discussed career paths, encouraging students to pursue advanced degrees for specialized roles but emphasized that coding and deployment skills are equally critical. Bayal compared the U.S. and Turkish job markets, expressing optimism about Turkey’s growing analytics sector. In closing, he shared challenges from his entrepreneurial experiences, noting that technical skills alone are not enough for business success soft skills and resilience are essential. Bayal’s advice for students was to embrace continuous learning, start small, and focus on building both technical and practical expertise.
+
+Question 1
+What are the key skills and challenges involved in successfully deploying an optimization model in a real world business environment, according to Bayal?
+Answer:
+Bayal emphasizes that deploying optimization models requires more than just technical expertise. Key skills include problem definition, coding proficiency (especially in Python), and user interface design to ensure the model is accessible to endusers. 
+Question 2
+According to Bayal, what is the primary reason companies still value human involvement in optimization, despite advancements in ai?
+A) Ai is not yet capable of predicting market trends accurately.
+B) Human involvement ensures political and strategic decisions are incorporated.
+C) Optimization problems often involve complex constraints that ai alone cannot solve.
+D) ai is unable to work with mathematical solvers like Gurobi and Xpress.
+Answer:
+C) Optimization problems often involve complex constraints that ai alone cannot solve.
+```
+
+## Part 2
+
+```{r}
+library(dslabs)
+data("polls_us_election_2016")
+
+first_ten_rows <- head(polls_us_election_2016, 10)
+first_ten_rows
+print("First 10 rows of the original dataset:")
+print(first_ten_rows)
+
+total_na <- sum(is.na(polls_us_election_2016))
+total_na
+cat("Total number of NA values:", total_na, "\n")
+
+birth_year <- 2002  
+name <- "Hazan"    
+
+new_data_set <- polls_us_election_2016  
+
+
+for (i in seq_along(new_data_set)) {
+  if (is.numeric(new_data_set[[i]])) {
+    new_data_set[[i]][is.na(new_data_set[[i]])] <- birth_year
+  } else if (is.character(new_data_set[[i]])) {
+    new_data_set[[i]][is.na(new_data_set[[i]])] <- name
+  }
+}
+
+new_first_ten_rows <- head(new_data_set, 10)
+new_first_ten_rows
+print("First 10 rows of the modified dataset:")
+print(new_first_ten_rows)
+
+new_total_na <- sum(is.na(new_data_set))
+new_total_na
+cat("Total number of NA values in the modified dataset:", new_total_na, "\n")
+
+```

@@ -214,8 +214,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#assignment-1" id="toc-assignment-1" class="nav-link active" data-scroll-target="#assignment-1">Assignment 1</a>
   <ul class="collapse">
-  <li><a href="#a" id="toc-a" class="nav-link" data-scroll-target="#a">(a)</a></li>
-  <li><a href="#b" id="toc-b" class="nav-link" data-scroll-target="#b">(b)</a></li>
+  <li><a href="#part-1" id="toc-part-1" class="nav-link" data-scroll-target="#part-1">Part 1</a></li>
+  <li><a href="#part-2" id="toc-part-2" class="nav-link" data-scroll-target="#part-2">Part 2</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -248,18 +248,265 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="assignment-1" class="level1">
 <h1>Assignment 1</h1>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">+</span> <span class="dv">1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 2</code></pre>
-</div>
-</div>
 <p>My first assignment has two parts.</p>
-<section id="a" class="level2">
-<h2 class="anchored" data-anchor-id="a">(a)</h2>
+<section id="part-1" class="level2">
+<h2 class="anchored" data-anchor-id="part-1">Part 1</h2>
+<div class="cell">
+<pre class="veri cell-code"><code>
+Summary
+Bayal’s presentation focused on his academic and professional journey, highlighting key lessons in operations research, analytics, and optimization. After earning degrees from METU and a PhD. from Arizona State University, he shifted from academia to industry, working with companies like Lamsoft and Fico. He explained four main types of analytics: descriptive, diagnostic, predictive, and prescriptive, emphasizing real world applications such as supply chain management and pricing models. Bayal stressed the importance of mastering tools like python, gurobi, and xpress to remain competitive. A key takeaway was the importance of defining problems clearly and using quantifiable KPIs to measure success. Bayal reflected on the gap between theory and practice, advising students to build practical skills through small projects and optimization workflows. He noted that AI complements but does not replace traditional optimization, as both are essential for solving complex problems. He also discussed career paths, encouraging students to pursue advanced degrees for specialized roles but emphasized that coding and deployment skills are equally critical. Bayal compared the U.S. and Turkish job markets, expressing optimism about Turkey’s growing analytics sector. In closing, he shared challenges from his entrepreneurial experiences, noting that technical skills alone are not enough for business success soft skills and resilience are essential. Bayal’s advice for students was to embrace continuous learning, start small, and focus on building both technical and practical expertise.
+
+Question 1
+What are the key skills and challenges involved in successfully deploying an optimization model in a real world business environment, according to Bayal?
+Answer:
+Bayal emphasizes that deploying optimization models requires more than just technical expertise. Key skills include problem definition, coding proficiency (especially in Python), and user interface design to ensure the model is accessible to endusers. 
+Question 2
+According to Bayal, what is the primary reason companies still value human involvement in optimization, despite advancements in ai?
+A) Ai is not yet capable of predicting market trends accurately.
+B) Human involvement ensures political and strategic decisions are incorporated.
+C) Optimization problems often involve complex constraints that ai alone cannot solve.
+D) ai is unable to work with mathematical solvers like Gurobi and Xpress.
+Answer:
+C) Optimization problems often involve complex constraints that ai alone cannot solve.</code></pre>
+</div>
 </section>
-<section id="b" class="level2">
-<h2 class="anchored" data-anchor-id="b">(b)</h2>
+<section id="part-2" class="level2">
+<h2 class="anchored" data-anchor-id="part-2">Part 2</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dslabs)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"polls_us_election_2016"</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>first_ten_rows <span class="ot">&lt;-</span> <span class="fu">head</span>(polls_us_election_2016, <span class="dv">10</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>first_ten_rows</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>        state  startdate    enddate
+1        U.S. 2016-11-03 2016-11-06
+2        U.S. 2016-11-01 2016-11-07
+3        U.S. 2016-11-02 2016-11-06
+4        U.S. 2016-11-04 2016-11-07
+5        U.S. 2016-11-03 2016-11-06
+6        U.S. 2016-11-03 2016-11-06
+7        U.S. 2016-11-02 2016-11-06
+8        U.S. 2016-11-03 2016-11-05
+9  New Mexico 2016-11-06 2016-11-06
+10       U.S. 2016-11-04 2016-11-07
+                                                     pollster grade samplesize
+1                                    ABC News/Washington Post    A+       2220
+2                                     Google Consumer Surveys     B      26574
+3                                                       Ipsos    A-       2195
+4                                                      YouGov     B       3677
+5                                            Gravis Marketing    B-      16639
+6  Fox News/Anderson Robbins Research/Shaw &amp; Company Research     A       1295
+7                                     CBS News/New York Times    A-       1426
+8                                NBC News/Wall Street Journal    A-       1282
+9                                                    Zia Poll  &lt;NA&gt;       8439
+10                                                   IBD/TIPP    A-       1107
+   population rawpoll_clinton rawpoll_trump rawpoll_johnson rawpoll_mcmullin
+1          lv           47.00         43.00            4.00               NA
+2          lv           38.03         35.69            5.46               NA
+3          lv           42.00         39.00            6.00               NA
+4          lv           45.00         41.00            5.00               NA
+5          rv           47.00         43.00            3.00               NA
+6          lv           48.00         44.00            3.00               NA
+7          lv           45.00         41.00            5.00               NA
+8          lv           44.00         40.00            6.00               NA
+9          lv           46.00         44.00            6.00               NA
+10         lv           41.20         42.70            7.10               NA
+   adjpoll_clinton adjpoll_trump adjpoll_johnson adjpoll_mcmullin
+1         45.20163      41.72430        4.626221               NA
+2         43.34557      41.21439        5.175792               NA
+3         42.02638      38.81620        6.844734               NA
+4         45.65676      40.92004        6.069454               NA
+5         46.84089      42.33184        3.726098               NA
+6         49.02208      43.95631        3.057876               NA
+7         45.11649      40.92722        4.341786               NA
+8         43.58576      40.77325        5.365788               NA
+9         44.82594      41.59978        7.870127               NA
+10        42.92745      42.23545        6.316175               NA</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">"First 10 rows of the original dataset:"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "First 10 rows of the original dataset:"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(first_ten_rows)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>        state  startdate    enddate
+1        U.S. 2016-11-03 2016-11-06
+2        U.S. 2016-11-01 2016-11-07
+3        U.S. 2016-11-02 2016-11-06
+4        U.S. 2016-11-04 2016-11-07
+5        U.S. 2016-11-03 2016-11-06
+6        U.S. 2016-11-03 2016-11-06
+7        U.S. 2016-11-02 2016-11-06
+8        U.S. 2016-11-03 2016-11-05
+9  New Mexico 2016-11-06 2016-11-06
+10       U.S. 2016-11-04 2016-11-07
+                                                     pollster grade samplesize
+1                                    ABC News/Washington Post    A+       2220
+2                                     Google Consumer Surveys     B      26574
+3                                                       Ipsos    A-       2195
+4                                                      YouGov     B       3677
+5                                            Gravis Marketing    B-      16639
+6  Fox News/Anderson Robbins Research/Shaw &amp; Company Research     A       1295
+7                                     CBS News/New York Times    A-       1426
+8                                NBC News/Wall Street Journal    A-       1282
+9                                                    Zia Poll  &lt;NA&gt;       8439
+10                                                   IBD/TIPP    A-       1107
+   population rawpoll_clinton rawpoll_trump rawpoll_johnson rawpoll_mcmullin
+1          lv           47.00         43.00            4.00               NA
+2          lv           38.03         35.69            5.46               NA
+3          lv           42.00         39.00            6.00               NA
+4          lv           45.00         41.00            5.00               NA
+5          rv           47.00         43.00            3.00               NA
+6          lv           48.00         44.00            3.00               NA
+7          lv           45.00         41.00            5.00               NA
+8          lv           44.00         40.00            6.00               NA
+9          lv           46.00         44.00            6.00               NA
+10         lv           41.20         42.70            7.10               NA
+   adjpoll_clinton adjpoll_trump adjpoll_johnson adjpoll_mcmullin
+1         45.20163      41.72430        4.626221               NA
+2         43.34557      41.21439        5.175792               NA
+3         42.02638      38.81620        6.844734               NA
+4         45.65676      40.92004        6.069454               NA
+5         46.84089      42.33184        3.726098               NA
+6         49.02208      43.95631        3.057876               NA
+7         45.11649      40.92722        4.341786               NA
+8         43.58576      40.77325        5.365788               NA
+9         44.82594      41.59978        7.870127               NA
+10        42.92745      42.23545        6.316175               NA</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>total_na <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">is.na</span>(polls_us_election_2016))</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>total_na</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 11604</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Total number of NA values:"</span>, total_na, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Total number of NA values: 11604 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>birth_year <span class="ot">&lt;-</span> <span class="dv">2002</span>  </span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>name <span class="ot">&lt;-</span> <span class="st">"Hazan"</span>    </span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>new_data_set <span class="ot">&lt;-</span> polls_us_election_2016  </span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_along</span>(new_data_set)) {</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">is.numeric</span>(new_data_set[[i]])) {</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    new_data_set[[i]][<span class="fu">is.na</span>(new_data_set[[i]])] <span class="ot">&lt;-</span> birth_year</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> <span class="cf">if</span> (<span class="fu">is.character</span>(new_data_set[[i]])) {</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>    new_data_set[[i]][<span class="fu">is.na</span>(new_data_set[[i]])] <span class="ot">&lt;-</span> name</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>new_first_ten_rows <span class="ot">&lt;-</span> <span class="fu">head</span>(new_data_set, <span class="dv">10</span>)</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>new_first_ten_rows</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>        state  startdate    enddate
+1        U.S. 2016-11-03 2016-11-06
+2        U.S. 2016-11-01 2016-11-07
+3        U.S. 2016-11-02 2016-11-06
+4        U.S. 2016-11-04 2016-11-07
+5        U.S. 2016-11-03 2016-11-06
+6        U.S. 2016-11-03 2016-11-06
+7        U.S. 2016-11-02 2016-11-06
+8        U.S. 2016-11-03 2016-11-05
+9  New Mexico 2016-11-06 2016-11-06
+10       U.S. 2016-11-04 2016-11-07
+                                                     pollster grade samplesize
+1                                    ABC News/Washington Post    A+       2220
+2                                     Google Consumer Surveys     B      26574
+3                                                       Ipsos    A-       2195
+4                                                      YouGov     B       3677
+5                                            Gravis Marketing    B-      16639
+6  Fox News/Anderson Robbins Research/Shaw &amp; Company Research     A       1295
+7                                     CBS News/New York Times    A-       1426
+8                                NBC News/Wall Street Journal    A-       1282
+9                                                    Zia Poll  &lt;NA&gt;       8439
+10                                                   IBD/TIPP    A-       1107
+   population rawpoll_clinton rawpoll_trump rawpoll_johnson rawpoll_mcmullin
+1          lv           47.00         43.00            4.00             2002
+2          lv           38.03         35.69            5.46             2002
+3          lv           42.00         39.00            6.00             2002
+4          lv           45.00         41.00            5.00             2002
+5          rv           47.00         43.00            3.00             2002
+6          lv           48.00         44.00            3.00             2002
+7          lv           45.00         41.00            5.00             2002
+8          lv           44.00         40.00            6.00             2002
+9          lv           46.00         44.00            6.00             2002
+10         lv           41.20         42.70            7.10             2002
+   adjpoll_clinton adjpoll_trump adjpoll_johnson adjpoll_mcmullin
+1         45.20163      41.72430        4.626221             2002
+2         43.34557      41.21439        5.175792             2002
+3         42.02638      38.81620        6.844734             2002
+4         45.65676      40.92004        6.069454             2002
+5         46.84089      42.33184        3.726098             2002
+6         49.02208      43.95631        3.057876             2002
+7         45.11649      40.92722        4.341786             2002
+8         43.58576      40.77325        5.365788             2002
+9         44.82594      41.59978        7.870127             2002
+10        42.92745      42.23545        6.316175             2002</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">"First 10 rows of the modified dataset:"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "First 10 rows of the modified dataset:"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(new_first_ten_rows)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>        state  startdate    enddate
+1        U.S. 2016-11-03 2016-11-06
+2        U.S. 2016-11-01 2016-11-07
+3        U.S. 2016-11-02 2016-11-06
+4        U.S. 2016-11-04 2016-11-07
+5        U.S. 2016-11-03 2016-11-06
+6        U.S. 2016-11-03 2016-11-06
+7        U.S. 2016-11-02 2016-11-06
+8        U.S. 2016-11-03 2016-11-05
+9  New Mexico 2016-11-06 2016-11-06
+10       U.S. 2016-11-04 2016-11-07
+                                                     pollster grade samplesize
+1                                    ABC News/Washington Post    A+       2220
+2                                     Google Consumer Surveys     B      26574
+3                                                       Ipsos    A-       2195
+4                                                      YouGov     B       3677
+5                                            Gravis Marketing    B-      16639
+6  Fox News/Anderson Robbins Research/Shaw &amp; Company Research     A       1295
+7                                     CBS News/New York Times    A-       1426
+8                                NBC News/Wall Street Journal    A-       1282
+9                                                    Zia Poll  &lt;NA&gt;       8439
+10                                                   IBD/TIPP    A-       1107
+   population rawpoll_clinton rawpoll_trump rawpoll_johnson rawpoll_mcmullin
+1          lv           47.00         43.00            4.00             2002
+2          lv           38.03         35.69            5.46             2002
+3          lv           42.00         39.00            6.00             2002
+4          lv           45.00         41.00            5.00             2002
+5          rv           47.00         43.00            3.00             2002
+6          lv           48.00         44.00            3.00             2002
+7          lv           45.00         41.00            5.00             2002
+8          lv           44.00         40.00            6.00             2002
+9          lv           46.00         44.00            6.00             2002
+10         lv           41.20         42.70            7.10             2002
+   adjpoll_clinton adjpoll_trump adjpoll_johnson adjpoll_mcmullin
+1         45.20163      41.72430        4.626221             2002
+2         43.34557      41.21439        5.175792             2002
+3         42.02638      38.81620        6.844734             2002
+4         45.65676      40.92004        6.069454             2002
+5         46.84089      42.33184        3.726098             2002
+6         49.02208      43.95631        3.057876             2002
+7         45.11649      40.92722        4.341786             2002
+8         43.58576      40.77325        5.365788             2002
+9         44.82594      41.59978        7.870127             2002
+10        42.92745      42.23545        6.316175             2002</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>new_total_na <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">is.na</span>(new_data_set))</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>new_total_na</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 429</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Total number of NA values in the modified dataset:"</span>, new_total_na, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Total number of NA values in the modified dataset: 429 </code></pre>
+</div>
+</div>
 
 
 </section>
