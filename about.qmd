@@ -5,26 +5,24 @@ sidebar: false
 
 # Education
 
--   B.S., Industrial Engineering, Hacettepe University, Turkey, 20xx - ongoing.
+-   B.S., Industrial Engineering, METU 2020-2021, Hacettepe University 2021- ongoing.
 
 # Work Experience
 
-## Employements
-
-1.  Firm xxx, position xx, year xxx
-
-2.  Firm yyy, position yyy, year yyy
-
 ## Internships
 
-1.  Firm aaa, position xx, year xxx
+1.  Meteksan Savunma Sanayii A.Ş., 2024
 
-2.  Firm bbb, position yyy, year yyy
+2.  TCDD YHT Bakım Merkezi, 2024
 
 # Projects
 
+1.  Meteksan Savunma, Graduation Project
+
 # Competencies
 
-R, Quarto, Git, Python
+R, Quarto, Git, Python, Gurobi, Autocad, MS office
 
 # Hobbies
+
+Reading books, Fitness, Yoga
