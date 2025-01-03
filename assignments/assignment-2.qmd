@@ -135,32 +135,83 @@ ratings_per_year <- compiled_movies |>
   group_by(Year) |> 
   summarise(Average_Rating = mean(Rating, na.rm = TRUE), Movie_Count = n())
 
+library(ggplot2)
+
 ggplot(ratings_per_year, aes(x = Year, y = Average_Rating)) +
-  geom_point() +
-  geom_line() +
-  labs(title = "Average IMDb Rating Over the Years", x = "Year", y = "Average IMDb Rating")
+  geom_point(color = "blue", size = 3, alpha = 0.8) +
+  geom_line(color = "darkblue", size = 1) +
+  labs(
+    title = "Average IMDb Rating Over the Years",
+    x = "Year",
+    y = "Average IMDb Rating",
+    caption = "Source: IMDb Dataset"
+  ) +
+  theme_minimal(base_size = 14) +
+  scale_y_continuous(limits = c(0, 10), breaks = seq(0, 10, 1)) +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold"),
+    axis.text = element_text(size = 12),
+    panel.grid.minor = element_blank()
+  )
 
 ggplot(ratings_per_year, aes(x = Year, y = Movie_Count)) +
-  geom_bar(stat = "identity") +
-  labs(title = "Number of Movies Released Per Year", x = "Year", y = "Movie Count")
+  geom_bar(stat = "identity", fill = "steelblue", color = "black", width = 0.8) +
+  labs(
+    title = "Number of Movies Released Per Year",
+    x = "Year",
+    y = "Movie Count",
+    caption = "Source: IMDb Dataset"
+  ) +
+  theme_minimal(base_size = 14) +
+  scale_y_continuous(expand = c(0, 0)) +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold"),
+    axis.text = element_text(size = 12),
+    panel.grid.minor = element_blank()
+  )
+
 
 # correlation analysis between votes and ratings
 correlation_votes_ratings <- cor(compiled_movies$Votes, compiled_movies$Rating, use = "complete.obs")
 print(paste("Correlation between Votes and Ratings: ", correlation_votes_ratings))
 
+
 ggplot(compiled_movies, aes(x = Votes, y = Rating)) +
-  geom_point() +
-  geom_smooth(method = "lm", col = "red") +
-  labs(title = "Relationship Between IMDb Ratings and Vote Counts", x = "Vote Count", y = "IMDb Rating")
+  geom_point(color = "blue", alpha = 0.6, size = 2) +
+  geom_smooth(method = "lm", color = "red", se = TRUE, linetype = "dashed") +
+  labs(
+    title = "Relationship Between IMDb Ratings and Vote Counts",
+    x = "Vote Count",
+    y = "IMDb Rating",
+    caption = "Source: IMDb Dataset"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold"),
+    axis.text = element_text(size = 12),
+    panel.grid.minor = element_blank()
+  )
+
 
 # correlation analysis between duration and ratings
 duration_rating_correlation <- cor(compiled_movies$Duration, compiled_movies$Rating, use = "complete.obs")
 print(paste("Correlation between Duration and Ratings: ", duration_rating_correlation))
 
 ggplot(compiled_movies, aes(x = Duration, y = Rating)) +
-  geom_point() +
-  geom_smooth(method = "lm", col = "blue") +
-  labs(title = "Relationship Between IMDb Ratings and Movie Duration", x = "Movie Duration (minutes)", y = "IMDb Rating")
+  geom_point(color = "darkorange", alpha = 0.7, size = 2) +
+  geom_smooth(method = "lm", color = "blue", se = TRUE, linetype = "dotted") +
+  labs(
+    title = "Relationship Between IMDb Ratings and Movie Duration",
+    x = "Movie Duration (minutes)",
+    y = "IMDb Rating",
+    caption = "Source: IMDb Dataset"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold"),
+    axis.text = element_text(size = 12),
+    panel.grid.minor = element_blank()
+  )
 
 imdb_top_1000_url <- "https://www.imdb.com/search/title/?title_type=feature&groups=top_1000&country_of_origin=TR"
 
@@ -200,8 +251,21 @@ print(ranked_movies)
 head(ranked_movies, 11)
 
 ggplot(ranked_movies, aes(x = Year)) +
-  geom_bar() +
-  labs(title = "Distribution of Top 1000 Turkish Movies by Year", x = "Year", y = "Number of Movies")
+  geom_bar(fill = "darkcyan", color = "black", width = 0.9) +
+  labs(
+    title = "Distribution of Top 1000 Turkish Movies by Year",
+    x = "Year",
+    y = "Number of Movies",
+    caption = "Source: IMDb Dataset"
+  ) +
+  theme_minimal(base_size = 14) +
+  scale_y_continuous(expand = c(0, 0)) +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold"),
+    axis.text = element_text(size = 12),
+    panel.grid.minor = element_blank()
+  )
+
 
 # then merged with others 
 
