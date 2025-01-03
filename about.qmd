@@ -1,0 +1,28 @@
+---
+title: "About Me"
+sidebar: false 
+---
+
+# Education
+
+-   B.S., Industrial Engineering, METU 2020-2021, Hacettepe University 2021- ongoing.
+
+# Work Experience
+
+## Internships
+
+1.  Meteksan Savunma Sanayii A.Ş., 2024
+
+2.  TCDD YHT Bakım Merkezi, 2024
+
+# Projects
+
+1.  Meteksan Savunma, Graduation Project
+
+# Competencies
+
+R, Quarto, Git, Python, Gurobi, Autocad, MS office
+
+# Hobbies
+
+Reading books, Fitness, Yoga

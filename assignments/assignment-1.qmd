@@ -1,0 +1,72 @@
+---
+title: "Assignment 1"
+---
+
+# Assignment 1
+
+My first assignment has two parts.
+
+## Part 1
+
+```{Veri Bilimi ve Endüstri Mühendisliği Üzerine Sohbetler - Baykal Hafızoğlu & Erdi Daşdemir}
+
+Summary
+Baykal Hafızoğlu discussed core courses in operations research, analytics and optimization. He studied at METU and completed a PhD in Arizona State Uni. Later, he worked for Lamsoft and Fico. Highlighting some of the practical uses include supply chain and pricing models, he outlined four types of analytics: Descriptive Analytics. This is answering what has happened? He similarly mentioned that you should be good in python, gurobi and xpress. So the key takeaway from this he said was to make sure you know what problems need solving and how success will be measure, so it means having a set of KPIs that are measurable. He also touched on the theory vs practice divide and as an additional tip advised the students to pick up a couple of practical exercises in small student projects and industry style optimizations. While AI doesn't alleviate conventional optimization "AI definitely does not substitute for traditional optimisation, classical optimizer methods still need to be used to capture a lot of the interesting aspects" Hafızoğlu added. From career planning perspective, he stressed the importance of advanced degrees to get specialized for research oriented fields but coding & deployment skills are still needed much more. He concluded with thoughts on his entrepreneurial journey, stressing that being technically competent is not the only thing a successful entrepreneur needs to have. In business, soft skills and resilience are more important than all of these things.
+
+Question 1
+What are the key skills and challenges involved in successfully deploying an optimization model in a real world business environment?
+
+Answer:
+He said that an optimization model deployment is not just about a technical background but the most essential part for anyone should be decent problem definition skills, coding ability (in Python especially), and emissions to build user friendly interfaces so people from non-tech side of business are able to use this implemented solution. An emulator is not only a technical model that needs to work; it also has to be suitable for everyday use in business.
+
+Question 2
+According to Hafızoğlu, why do companies still value human involvement in optimization, despite advancements in AI?
+
+A) AI is not yet capable of accurately predicting market trends.
+B) Human involvement ensures strategic and political decisions are incorporated into the model.
+C) Optimization problems often involve complex constraints that AI alone cannot solve.
+D) AI cannot interface with mathematical solvers like Gurobi and Xpress.
+
+Answer:
+C) Optimization problems often involve complex constraints that AI alone cannot solve.
+```
+
+## Part 2
+
+```{r}
+library(dslabs)
+data("polls_us_election_2016")
+
+first_ten_rows <- head(polls_us_election_2016, 10)
+first_ten_rows
+print("First 10 rows of the original dataset:")
+print(first_ten_rows)
+
+total_na <- sum(is.na(polls_us_election_2016))
+total_na
+cat("Total number of NA values:", total_na, "\n")
+
+birth_year <- 2002  
+name <- "Hazan"    
+
+new_data_set <- polls_us_election_2016  
+
+
+for (i in seq_along(new_data_set)) {
+  if (is.numeric(new_data_set[[i]])) {
+    new_data_set[[i]][is.na(new_data_set[[i]])] <- birth_year
+  } else if (is.character(new_data_set[[i]])) {
+    new_data_set[[i]][is.na(new_data_set[[i]])] <- name
+  }
+}
+
+new_first_ten_rows <- head(new_data_set, 10)
+new_first_ten_rows
+print("First 10 rows of the modified dataset:")
+print(new_first_ten_rows)
+
+new_total_na <- sum(is.na(new_data_set))
+new_total_na
+cat("Total number of NA values in the modified dataset:", new_total_na, "\n")
+
+```

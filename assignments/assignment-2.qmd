@@ -1,0 +1,243 @@
+---
+title: "Assignment 2"
+---
+
+```{r}
+library(tidyverse)
+library(rvest)
+library(stringr)
+library(stringi)
+
+recent_movies <- "https://m.imdb.com/search/title/?title_type=feature&release_date=2010-01-01,2023-12-30&num_votes=2500,&country_of_origin=TR&count=250"
+old_movies <- "https://m.imdb.com/search/title/?title_type=feature&release_date=,2009-12-31&num_votes=2500,&country_of_origin=TR&count=250"
+
+movie_links <- c(recent_movies, old_movies)
+print(movie_links)
+
+# function to convert Turkish characters to ASCII
+normalize_text <- function(input_text) {
+  input_text <- stri_trans_general(input_text, "Latin-ASCII")
+  input_text <- trimws(input_text) 
+  return(input_text)
+}
+
+if(!require('stringr')) {install.packages('stringr'); library(stringr)}
+
+# convert duration to minutes (got help from gpt to write convertion function)
+transform_duration_to_minutes <- function(movie_duration) {
+  if (is.na(movie_duration)) {
+    return(NA)
+  }
+  
+  if (str_detect(movie_duration, "^\\d+h$")) {
+    hrs <- as.numeric(str_replace(movie_duration, "h$", ""))
+    return(hrs * 60)
+  }
+  
+  components <- str_split(movie_duration, " ", simplify = TRUE)
+  hrs <- as.numeric(str_replace(components[1], "h$", ""))
+  mins <- as.numeric(str_replace(components[2], "m$", ""))
+  return(hrs * 60 + mins)
+}
+
+
+# function to clean vote counts
+format_vote_count <- function(raw_votes) {
+  raw_votes <- str_replace_all(raw_votes, '"', "")
+  raw_votes <- str_trim(raw_votes)
+  if (grepl("K", raw_votes)) {
+    raw_votes <- str_replace_all(raw_votes, "[()K]", "")
+    raw_votes <- str_replace_all(raw_votes, "\\.", "")
+    return(as.numeric(raw_votes) * 1000)
+  } else if (grepl("M", raw_votes)) {
+    raw_votes <- str_replace_all(raw_votes, "[()M]", "")
+    return(as.numeric(raw_votes) * 1e6)
+  } else {
+    raw_votes <- str_replace_all(raw_votes, "[()]", "")
+    return(as.numeric(raw_votes))
+  }
+}
+
+all_data <- list()
+unique_titles <- c()
+release_years <- c()
+duration_minutes <- c()
+total_votes <- c()
+average_ratings <- c()
+
+# got help from gpt to write this part to scrape data from imdb
+
+for (link in movie_links) {
+  webpage <- read_html(link)
+  titles_raw <- webpage |> 
+    html_nodes('.ipc-title__text') |> 
+    html_text() |> 
+    tail(-1)
+  titles_raw <- head(titles_raw, -1)
+
+  
+  cleaned_titles <- sapply(titles_raw, normalize_text)
+  cleaned_titles <- unique(cleaned_titles)
+  cleaned_titles <- cleaned_titles[!grepl("\\?\\u", cleaned_titles)]
+  unique_titles <- c(unique_titles, cleaned_titles)
+  years_raw <- webpage |> 
+    html_nodes('.sc-300a8231-7.eaXxft.dli-title-metadata-item:nth-child(1)') |> 
+    html_text() |> 
+    str_extract("\\d{4}") |> 
+    as.numeric()
+  release_years <- c(release_years, years_raw)
+  durations_raw <- webpage |> 
+    html_nodes('.sc-300a8231-7.eaXxft.dli-title-metadata-item:nth-child(2)') |> 
+    html_text()
+  durations_minutes <- sapply(durations_raw, transform_duration_to_minutes)
+  duration_minutes <- c(duration_minutes, durations_minutes)
+  ratings_raw <- webpage |> 
+    html_nodes('.ipc-rating-star--rating') |> 
+    html_text() |> 
+    as.numeric()
+  average_ratings <- c(average_ratings, ratings_raw)
+  
+  raw_vote_counts <- webpage |> 
+    html_nodes('.ipc-rating-star--voteCount') |> 
+    html_text()
+  formatted_votes <- sapply(raw_vote_counts, format_vote_count)
+  total_votes <- c(total_votes, formatted_votes)
+
+  movie_data <- data.frame(
+    Title = unique_titles,
+    Year = release_years,
+    Duration = duration_minutes,
+    Rating = average_ratings,
+    Votes = total_votes
+  )
+}
+
+
+compiled_movies <- bind_rows(movie_data)
+compiled_movies$Title <- gsub("^\\d+\\.\\s*", "", compiled_movies$Title)
+compiled_movies$Title <- trimws(compiled_movies$Title)
+
+print(compiled_movies)
+
+# sorting by IMDb ratings
+top_rated_movies <- compiled_movies |> arrange(desc(Rating)) |> head(5)
+least_rated_movies <- compiled_movies |> arrange(Rating) |> head(5)
+print(top_rated_movies)
+print(least_rated_movies)
+
+# favorite movies
+favorites <- c("Babam ve Oglum", "G.O.R.A.", "Kis Uykusu")
+favorite_movie_data <- compiled_movies |> filter(Title %in% favorites)
+print(favorite_movie_data)
+
+
+ratings_per_year <- compiled_movies |> 
+  group_by(Year) |> 
+  summarise(Average_Rating = mean(Rating, na.rm = TRUE), Movie_Count = n())
+
+ggplot(ratings_per_year, aes(x = Year, y = Average_Rating)) +
+  geom_point() +
+  geom_line() +
+  labs(title = "Average IMDb Rating Over the Years", x = "Year", y = "Average IMDb Rating")
+
+ggplot(ratings_per_year, aes(x = Year, y = Movie_Count)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Number of Movies Released Per Year", x = "Year", y = "Movie Count")
+
+# correlation analysis between votes and ratings
+correlation_votes_ratings <- cor(compiled_movies$Votes, compiled_movies$Rating, use = "complete.obs")
+print(paste("Correlation between Votes and Ratings: ", correlation_votes_ratings))
+
+ggplot(compiled_movies, aes(x = Votes, y = Rating)) +
+  geom_point() +
+  geom_smooth(method = "lm", col = "red") +
+  labs(title = "Relationship Between IMDb Ratings and Vote Counts", x = "Vote Count", y = "IMDb Rating")
+
+# correlation analysis between duration and ratings
+duration_rating_correlation <- cor(compiled_movies$Duration, compiled_movies$Rating, use = "complete.obs")
+print(paste("Correlation between Duration and Ratings: ", duration_rating_correlation))
+
+ggplot(compiled_movies, aes(x = Duration, y = Rating)) +
+  geom_point() +
+  geom_smooth(method = "lm", col = "blue") +
+  labs(title = "Relationship Between IMDb Ratings and Movie Duration", x = "Movie Duration (minutes)", y = "IMDb Rating")
+
+imdb_top_1000_url <- "https://www.imdb.com/search/title/?title_type=feature&groups=top_1000&country_of_origin=TR"
+
+# same as above instead just scraped title and year
+
+top_1000_html <- read_html(imdb_top_1000_url)
+
+top_1000_titles <- top_1000_html |> 
+  html_nodes('.ipc-title__text') |> 
+  html_text() |> 
+  tail(-1) |> 
+  head(-1)
+
+cleaned_top_titles <- sapply(top_1000_titles, normalize_text)
+cleaned_top_titles <- unique(cleaned_top_titles)
+cleaned_top_titles <- cleaned_top_titles[!grepl("\\?\\u", cleaned_top_titles)]
+
+top_1000_years <- top_1000_html |> 
+  html_nodes('.sc-300a8231-7.eaXxft.dli-title-metadata-item:nth-child(1)') |> 
+  html_text() |> 
+  as.numeric()
+
+top_1000_df <- data.frame(Title = cleaned_top_titles, Year = top_1000_years)
+top_1000_df$Title <- gsub("^\\d+\\.\\s*", "", top_1000_df$Title)
+top_1000_df$Title <- trimws(top_1000_df$Title)
+
+print(top_1000_df)
+
+merged_dataset <- left_join(top_1000_df, movie_data, by = c("Title", "Year"))
+
+print(merged_dataset)
+
+ranked_movies <- merged_dataset |> arrange(desc(Rating))
+
+print(ranked_movies)
+
+head(ranked_movies, 11)
+
+ggplot(ranked_movies, aes(x = Year)) +
+  geom_bar() +
+  labs(title = "Distribution of Top 1000 Turkish Movies by Year", x = "Year", y = "Number of Movies")
+
+# then merged with others 
+
+merged_dataset <- left_join(top_1000_df, compiled_movies, by = c("Title", "Year"))
+
+print("Merged Dataset:")
+print(head(merged_dataset))
+
+average_rating <- mean(merged_dataset$Rating, na.rm = TRUE)
+print(paste("Average IMDb rating of the Top 1000 Turkish movies: ", average_rating))
+
+ranked_top_11 <- merged_dataset |> 
+  arrange(desc(Rating)) |> 
+  head(11)
+
+print("IMDb Top 1000 Turkish Movies:")
+print(ranked_top_11)
+
+initial_top_11 <- compiled_movies |> 
+  arrange(desc(Rating)) |> 
+  head(11)
+
+print("Initial Top 1000 Movies from the Original Dataset:")
+print(initial_top_11)
+
+same_movies <- all(ranked_top_11$Title %in% initial_top_11$Title)
+
+if (same_movies) {
+  print("Yes, IMDb's Top 1000 list might be based solely on ratings.")
+} else {
+  print("No, IMDb's Top 1000 list might consider other factors.")
+}
+
+if (!same_movies) {
+  different_movies <- ranked_top_11$Title[!ranked_top_11$Title %in% initial_top_11$Title]
+  print("Different movies in IMDb's Top 1000:")
+  print(different_movies)
+}
+```
